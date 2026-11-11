@@ -2,961 +2,219 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>1830 맨체스터: 연기와 기계의 도시</title>
-  <!-- Tailwind CSS CDN -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <!-- FontAwesome Icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <!-- Google Fonts (Playfair Display & Noto Serif KR) -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800&family=Noto+Serif+KR:wght@400;600;700&display=swap" rel="stylesheet">
-  
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            coal: {
-              900: '#121214',
-              800: '#1b1b1f',
-              700: '#2a2b30'
-            },
-            sepia: {
-              100: '#f8f4eb',
-              200: '#efe6d5',
-              300: '#dfd2b9',
-              800: '#534331',
-              900: '#382a1c'
-            },
-            vintageGold: '#c59b27',
-            rustRed: '#9e3223',
-            steamBlue: '#4b6584'
-          },
-          fontFamily: {
-            serif: ['"Noto Serif KR"', 'serif'],
-            vintage: ['"Cinzel"', 'serif']
-          }
-        }
-      }
-    }
-  </script>
-
   <style>
-    body {
-      background-color: #121214;
-      color: #efe6d5;
-      font-family: 'Noto Serif KR', serif;
-      -webkit-tap-highlight-color: transparent;
-    }
-    .vintage-border {
-      border: 1px solid #534331;
-      box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.6), 0 4px 10px rgba(0,0,0,0.5);
-    }
-    .custom-scroll::-webkit-scrollbar {
-      width: 4px;
-    }
-    .custom-scroll::-webkit-scrollbar-thumb {
-      background: #534331;
-      border-radius: 4px;
-    }
-    @keyframes pulse-subtle {
-      0%, 100% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.95; transform: scale(0.99); }
-    }
-    .atmosphere-pulse {
-      animation: pulse-subtle 4s infinite ease-in-out;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans KR", sans-serif; }
+    body { background-color: #1a1a1a; color: #e0e0e0; display: flex; justify-content: center; min-height: 100vh; }
+    #app { width: 100%; max-width: 480px; background: #242424; min-height: 100vh; display: flex; flex-direction: column; padding: 20px; border-left: 1px solid #333; border-right: 1px solid #333; }
+    h1 { font-size: 1.5rem; text-align: center; color: #e6b422; margin-bottom: 8px; line-height: 1.3; }
+    h2 { font-size: 1.2rem; color: #fff; margin-bottom: 12px; }
+    .subtitle { text-align: center; color: #999; font-size: 0.9rem; margin-bottom: 24px; }
+    .card { background: #2f2f2f; border-radius: 8px; padding: 16px; margin-bottom: 16px; border: 1px solid #444; }
+    .btn { width: 100%; background: #4a5568; color: #fff; border: none; padding: 14px 16px; border-radius: 8px; font-size: 1rem; cursor: pointer; margin-bottom: 10px; font-weight: 600; text-align: left; line-height: 1.4; transition: background 0.2s; }
+    .btn:active { background: #2d3748; }
+    .btn-primary { background: #b8860b; color: #fff; text-align: center; }
+    .btn-primary:active { background: #996515; }
+    .stats-bar { display: flex; justify-content: space-around; background: #1e1e1e; padding: 10px; border-radius: 8px; margin-bottom: 16px; border: 1px solid #3d3d3d; }
+    .stat-item { text-align: center; font-size: 0.85rem; }
+    .stat-value { font-weight: bold; font-size: 1.1rem; color: #e6b422; }
+    .desc { font-size: 0.95rem; line-height: 1.6; color: #d1d5db; margin-bottom: 16px; word-break: keep-all; }
+    .badge { display: inline-block; background: #7c2d12; color: #fed7aa; padding: 3px 8px; border-radius: 4px; font-size: 0.8rem; margin-bottom: 10px; font-weight: bold; }
+    .hidden { display: none !important; }
+    .feedback-box { background: #1f2937; border-left: 4px solid #3b82f6; padding: 12px; margin-bottom: 16px; font-size: 0.9rem; line-height: 1.5; color: #93c5fd; }
   </style>
 </head>
-<body class="min-h-screen flex justify-center items-center p-2 sm:p-4">
+<body>
 
-  <!-- 메인 모바일 래퍼 컨테이너 -->
-  <main id="app-container" class="w-full max-w-md bg-coal-800 rounded-2xl overflow-hidden shadow-2xl vintage-border relative flex flex-col min-h-[92vh]">
+<div id="app">
+  <!-- 1. 시작 화면 -->
+  <div id="screen-intro">
+    <div style="text-align: center; margin-top: 20px; font-size: 3rem;">🏭</div>
+    <h1>1830 맨체스터<br><span style="font-size: 1rem; color: #aaa;">연기와 기계의 도시</span></h1>
+    <p class="subtitle">19세기 산업혁명 역사 체험 시뮬레이션</p>
     
-    <!-- 배경 텍스처 오버레이 -->
-    <div class="absolute inset-0 opacity-10 pointer-events-none bg-[radial-gradient(#d5b682_1px,transparent_1px)] [background-size:16px_16px]"></div>
+    <div class="card desc">
+      검은 연기가 하늘을 뒤덮은 1830년 영국 맨체스터.<br><br>
+      증기기관과 기계가 인간의 손을 대신하기 시작하면서 엄청난 부가 축적되지만, 누군가는 하루 16시간 노동과 빈곤에 신음합니다.<br><br>
+      당신은 이 격변의 시대에서 어떤 선택을 내리겠습니까?
+    </div>
 
-    <!-- 헤더 / 상태 표시창 (HUD) -->
-    <header id="game-hud" class="hidden relative z-10 bg-coal-900 border-b border-sepia-800 px-4 py-3 text-xs">
-      <div class="flex items-center justify-between mb-2">
-        <div class="flex items-center space-x-2">
-          <span id="hud-role-icon" class="text-vintageGold text-sm"></span>
-          <span id="hud-role-name" class="font-bold text-sepia-200 tracking-wide"></span>
-        </div>
-        <div class="px-2 py-0.5 rounded bg-sepia-900 text-vintageGold font-bold text-[11px] border border-sepia-800">
-          <span id="hud-round-label">Round 1 / 4</span>
-        </div>
-      </div>
-      <!-- 스탯 게이지 바 -->
-      <div class="grid grid-cols-3 gap-2">
-        <div>
-          <div class="flex justify-between text-[10px] text-gray-400 mb-0.5">
-            <span id="stat1-name">체력</span>
-            <span id="stat1-val">80</span>
-          </div>
-          <div class="w-full bg-coal-700 h-1.5 rounded-full overflow-hidden">
-            <div id="stat1-bar" class="bg-rustRed h-full transition-all duration-500" style="width: 80%"></div>
-          </div>
-        </div>
-        <div>
-          <div class="flex justify-between text-[10px] text-gray-400 mb-0.5">
-            <span id="stat2-name">자금</span>
-            <span id="stat2-val">50</span>
-          </div>
-          <div class="w-full bg-coal-700 h-1.5 rounded-full overflow-hidden">
-            <div id="stat2-bar" class="bg-vintageGold h-full transition-all duration-500" style="width: 50%"></div>
-          </div>
-        </div>
-        <div>
-          <div class="flex justify-between text-[10px] text-gray-400 mb-0.5">
-            <span id="stat3-name">불만/분노</span>
-            <span id="stat3-val">40</span>
-          </div>
-          <div class="w-full bg-coal-700 h-1.5 rounded-full overflow-hidden">
-            <div id="stat3-bar" class="bg-steamBlue h-full transition-all duration-500" style="width: 40%"></div>
-          </div>
-        </div>
-      </div>
-    </header>
+    <h2 style="font-size: 1rem; margin-top: 10px;">체험할 인물을 선택하세요:</h2>
+    <button class="btn" onclick="startGame('tom')">👦 톰 (11세, 아동 노동자)<br><small style="color: #bbb; font-weight: normal;">방적기 아래 실 찌꺼기를 치우는 청소년</small></button>
+    <button class="btn" onclick="startGame('william')">🔨 윌리엄 (40세, 숙련 직조공)<br><small style="color: #bbb; font-weight: normal;">기계 도입으로 일자리를 잃어가는 장인</small></button>
+    <button class="btn" onclick="startGame('james')">🎩 제임스 (45세, 방적 공장주)<br><small style="color: #bbb; font-weight: normal;">이윤과 생존 경쟁에 직면한 신흥 자본가</small></button>
+    <button class="btn" onclick="startGame('mary')">🏠 메리 (24세, 도시 빈민 여성)<br><small style="color: #bbb; font-weight: normal;">비위생적인 지하실에서 가족을 부양하는 노동자</small></button>
+  </div>
 
-    <!-- 스크린 1: 시작 & 역할 선택 화면 -->
-    <section id="screen-start" class="relative z-10 flex-1 flex flex-col justify-between p-5 text-center overflow-y-auto custom-scroll">
-      <div class="my-auto py-2">
-        <div class="inline-block px-3 py-1 mb-2 border border-vintageGold/40 rounded-full text-vintageGold text-xs uppercase tracking-widest font-vintage">
-          Manchester 1830
-        </div>
-        <h1 class="text-2xl sm:text-3xl font-extrabold text-sepia-100 tracking-tight mb-2">
-          연기와 기계의 도시
-        </h1>
-        <p class="text-xs text-sepia-300 leading-relaxed mb-5 max-w-xs mx-auto">
-          19세기 증기기관의 굉음과 검은 연기가 뒤덮인 맨체스터. 거대한 자본주의의 소용돌이 속에서 당신은 어떤 선택을 내리겠습니까?
-        </p>
+  <!-- 2. 게임 플레이 화면 -->
+  <div id="screen-game" class="hidden">
+    <div class="stats-bar">
+      <div class="stat-item"><span id="stat-name-1">생존도</span><br><span class="stat-value" id="stat-val-1">100</span></div>
+      <div class="stat-item"><span id="stat-name-2">자산/소득</span><br><span class="stat-value" id="stat-val-2">50</span></div>
+      <div class="stat-item"><span>현재 라운드</span><br><span class="stat-value" id="round-indicator">1 / 4</span></div>
+    </div>
 
-        <!-- 캐릭터 선택 안내 -->
-        <h2 class="text-xs font-bold text-vintageGold uppercase tracking-wider mb-3">체험할 인물을 선택하세요</h2>
-        <div class="grid grid-cols-2 gap-2 text-left mb-4" id="role-select-grid">
-          <!-- JS로 역할 카드 동적 생성 -->
-        </div>
+    <div class="card">
+      <span class="badge" id="role-badge">역할명</span>
+      <h2 id="scenario-title">시나리오 제목</h2>
+      <p class="desc" id="scenario-desc">시나리오 본문 내용입니다.</p>
+    </div>
 
-        <button id="btn-random-role" class="w-full py-2.5 mb-2 rounded-lg bg-coal-700 hover:bg-coal-600 border border-sepia-800 text-sepia-200 text-xs font-semibold flex items-center justify-center space-x-2 transition">
-          <i class="fa-solid fa-dice text-vintageGold"></i>
-          <span>무작위 역할로 즉시 시작</span>
-        </button>
-      </div>
+    <div id="feedback-area" class="feedback-box hidden"></div>
 
-      <div class="pt-3 border-t border-sepia-800/60 text-[11px] text-gray-400">
-        <p>고등학교 2학년 세계사 수업용 인터랙티브 학습 시뮬레이션</p>
-      </div>
-    </section>
+    <div id="choice-buttons">
+      <!-- 선택지 버튼 동적 생성 -->
+    </div>
+  </div>
 
-    <!-- 스크린 2: 라운드 스토리 및 딜레마 선택 화면 -->
-    <section id="screen-round" class="hidden relative z-10 flex-1 flex flex-col justify-between p-5 overflow-y-auto custom-scroll">
-      <div>
-        <!-- 라운드 헤드라인 -->
-        <div class="flex items-center space-x-2 text-vintageGold text-xs font-bold uppercase tracking-wider mb-2">
-          <i class="fa-solid fa-clock-rotate-left"></i>
-          <span id="round-title-prefix">Round 1</span>
-        </div>
-        <h2 id="round-headline" class="text-lg font-bold text-sepia-100 mb-3 leading-snug">
-          상황 타이틀
-        </h2>
+  <!-- 3. 엔딩 및 디브리핑 화면 -->
+  <div id="screen-ending" class="hidden">
+    <h1>시뮬레이션 종료</h1>
+    <p class="subtitle">19세기 맨체스터에서의 기록</p>
 
-        <!-- 상황 설명 카드 -->
-        <div class="bg-coal-900/90 rounded-xl p-4 border border-sepia-800/80 mb-4 shadow-inner">
-          <div id="round-scenario-text" class="text-xs sm:text-sm text-sepia-200 leading-relaxed space-y-2">
-            <!-- 시나리오 텍스트 삽입 -->
-          </div>
-        </div>
+    <div class="card">
+      <h2 id="ending-title" style="color: #e6b422;">엔딩 제목</h2>
+      <p class="desc" id="ending-desc">엔딩 해설 본문입니다.</p>
+    </div>
 
-        <!-- 딜레마 질문 -->
-        <p class="text-xs font-semibold text-vintageGold mb-2.5 flex items-center">
-          <i class="fa-solid fa-circle-question mr-1.5"></i>
-          <span>당신의 결정은 무엇입니까?</span>
-        </p>
+    <div class="card" style="background: #1e293b; border-color: #3b82f6;">
+      <h2 style="font-size: 1rem; color: #60a5fa;">💡 수업 토론 과제</h2>
+      <p class="desc" style="font-size: 0.9rem; color: #cbd5e1; margin-bottom: 0;">
+        1. 내가 선택한 인물이 마주했던 가장 가혹한 딜레마는 무엇이었나요?<br><br>
+        2. 당시 기계를 부수었던 '러다이트'의 행동과 오늘날 인공지능·키오스크 확산으로 겪는 갈등은 어떤 점이 닮아 있나요?
+      </p>
+    </div>
 
-        <!-- 선택지 목록 -->
-        <div id="choices-container" class="space-y-2.5">
-          <!-- 버튼들이 동적으로 주입됨 -->
-        </div>
-      </div>
-    </section>
+    <button class="btn btn-primary" onclick="copyResult()">📋 내 활동 결과 복사하기</button>
+    <button class="btn" style="text-align: center;" onclick="location.reload()">🔄 다시 시작하기</button>
+  </div>
+</div>
 
-    <!-- 스크린 3: 선택 결과 피드백 및 역사 팩트 모달/창 -->
-    <section id="screen-feedback" class="hidden relative z-10 flex-1 flex flex-col justify-between p-5 overflow-y-auto custom-scroll">
-      <div>
-        <div class="w-12 h-12 mx-auto rounded-full bg-sepia-900/80 border border-vintageGold flex items-center justify-center text-vintageGold text-xl mb-3 shadow-lg">
-          <i id="feedback-icon" class="fa-solid fa-scale-balanced"></i>
-        </div>
-        <h3 id="feedback-title" class="text-center font-bold text-sepia-100 text-base mb-1">
-          선택의 결과
-        </h3>
-        <p id="feedback-change-tags" class="text-center text-xs space-x-1.5 mb-4 text-gray-300">
-          <!-- 스탯 변동 뱃지 -->
-        </p>
-
-        <!-- 결과 서사 -->
-        <div class="bg-coal-900/90 rounded-xl p-4 border border-sepia-800 mb-3">
-          <p id="feedback-story" class="text-xs sm:text-sm text-sepia-200 leading-relaxed">
-            <!-- 스토리 결과 -->
-          </p>
-        </div>
-
-        <!-- 실제 역사 노트 카드 -->
-        <div class="bg-sepia-900/30 rounded-xl p-3.5 border border-vintageGold/30 text-sepia-300">
-          <div class="flex items-center space-x-1.5 text-vintageGold text-xs font-bold mb-1">
-            <i class="fa-solid fa-book-bookmark"></i>
-            <span>역사 속 실제 이야기</span>
-          </div>
-          <p id="feedback-history" class="text-[11.5px] leading-relaxed text-gray-300">
-            <!-- 역사적 사실 설명 -->
-          </p>
-        </div>
-      </div>
-
-      <button id="btn-next-round" class="w-full mt-4 py-3 rounded-xl bg-vintageGold text-coal-900 font-bold text-xs uppercase tracking-wider hover:bg-yellow-500 shadow-md transition active:scale-95">
-        다음 라운드로 넘어가기
-      </button>
-    </section>
-
-    <!-- 스크린 4: 엔딩 및 토론 디브리핑 화면 -->
-    <section id="screen-ending" class="hidden relative z-10 flex-1 flex flex-col justify-between p-5 overflow-y-auto custom-scroll">
-      <div>
-        <div class="text-center mb-4">
-          <span class="text-[11px] uppercase tracking-widest text-vintageGold font-vintage">Journey's End</span>
-          <h2 id="ending-title" class="text-xl font-bold text-sepia-100 mt-1 mb-2"></h2>
-          <div id="ending-badge" class="inline-block px-3 py-1 rounded-full text-xs font-semibold bg-coal-900 border border-sepia-800 text-vintageGold mb-3">
-          </div>
-        </div>
-
-        <!-- 최종 결말 내용 -->
-        <div class="bg-coal-900 rounded-xl p-4 border border-sepia-800 mb-4">
-          <p id="ending-desc" class="text-xs sm:text-sm text-sepia-200 leading-relaxed mb-3"></p>
-          <div class="border-t border-sepia-800 pt-2 text-[11px] text-gray-400">
-            <span class="font-bold text-sepia-300">최종 도달 자원: </span>
-            <span id="final-stats-summary"></span>
-          </div>
-        </div>
-
-        <!-- 교실 수업용 토론 및 성찰 (현대 AI/키오스크 연결) -->
-        <div class="bg-sepia-900/40 rounded-xl p-4 border border-vintageGold/40 mb-4">
-          <div class="flex items-center space-x-2 text-vintageGold font-bold text-xs mb-2">
-            <i class="fa-solid fa-comments"></i>
-            <span>세계사 교실 토론 & 성찰 질문</span>
-          </div>
-          <ul id="debriefing-questions" class="text-xs text-sepia-200 space-y-2 list-disc pl-4 leading-relaxed">
-            <!-- 질문 자동 생성 -->
-          </ul>
-        </div>
-
-        <!-- 복사 버튼 (학생 수업용 답변 공유 편의) -->
-        <button id="btn-copy-summary" class="w-full py-2.5 mb-2 rounded-lg bg-coal-700 hover:bg-coal-600 border border-sepia-800 text-sepia-200 text-xs flex items-center justify-center space-x-2 transition">
-          <i class="fa-regular fa-clipboard"></i>
-          <span>나의 결과 요약 복사하기 (패들렛 제출용)</span>
-        </button>
-        <p id="copy-toast" class="hidden text-center text-xs text-green-400 mb-2">요약이 클립보드에 복사되었습니다!</p>
-      </div>
-
-      <button id="btn-restart" class="w-full mt-2 py-3 rounded-xl bg-coal-900 hover:bg-coal-700 border border-sepia-800 text-sepia-200 font-bold text-xs transition active:scale-95">
-        다른 역할로 다시 체험하기
-      </button>
-    </section>
-
-  </main>
-
-  <script>
-    /* -------------------------------------------------------------
-       1. 데이터 정의: 역할 (4개)
-    ------------------------------------------------------------- */
-    const ROLES = {
-      tom: {
-        id: 'tom',
-        name: '톰 (11세)',
-        title: '아동 노동자',
-        icon: 'fa-child-reaching',
-        desc: '하루 16시간 동안 멈추지 않는 증기 방적기 밑으로 기어들어가 끊어진 실밥을 잇는 피어서(Piercer) 소년.',
-        initialStats: { stat1: 75, stat2: 25, stat3: 45 },
-        statNames: { stat1: '체력/생존', stat2: '임금(식비)', stat3: '공포/스트레스' },
-        statColors: { stat1: 'bg-rustRed', stat2: 'bg-vintageGold', stat3: 'bg-steamBlue' }
-      },
-      william: {
-        id: 'william',
-        name: '윌리엄 (40세)',
-        title: '숙련 수공업 직조공',
-        icon: 'fa-hammer',
-        desc: '가내 수공업으로 가문의 긍지를 지켜왔으나, 증기 역직기의 보급으로 생계가 벼랑 끝에 몰린 장인.',
-        initialStats: { stat1: 65, stat2: 35, stat3: 70 },
-        statNames: { stat1: '가계 안정도', stat2: '자금', stat3: '분노/저항심' },
-        statColors: { stat1: 'bg-emerald-600', stat2: 'bg-vintageGold', stat3: 'bg-rustRed' }
-      },
-      james: {
-        id: 'james',
-        name: '제임스 (48세)',
-        title: '신흥 방적 공장주',
-        icon: 'fa-user-tie',
-        desc: '막대한 은행 빚과 증기 설비 투자를 감행한 자본가. 해외 수출 경쟁에서 지면 하루아침에 파산할 수 있다.',
-        initialStats: { stat1: 50, stat2: 85, stat3: 40 },
-        statNames: { stat1: '사회적 평판', stat2: '공장 자본', stat3: '공장 리스크' },
-        statColors: { stat1: 'bg-steamBlue', stat2: 'bg-vintageGold', stat3: 'bg-rustRed' }
-      },
-      mary: {
-        id: 'mary',
-        name: '메리 (24세)',
-        title: '도시 빈민가 여성 노동자',
-        icon: 'fa-person-dress',
-        desc: '맨체스터의 습한 지하 단칸방에서 결핵을 앓는 갓난아이를 홀로 돌보며 방적 공장 야간조로 일하는 여성.',
-        initialStats: { stat1: 60, stat2: 30, stat3: 50 },
-        statNames: { stat1: '가족 건강', stat2: '생계 자금', stat3: '절망/한계' },
-        statColors: { stat1: 'bg-rustRed', stat2: 'bg-vintageGold', stat3: 'bg-steamBlue' }
-      }
-    };
-
-    /* -------------------------------------------------------------
-       2. 라운드별 시나리오 & 선택지 & 역사 노트
-    ------------------------------------------------------------- */
-    const SCENARIOS = {
-      1: {
-        roundTitle: "Round 1. 공장의 하루와 생존의 기로",
-        theme: "가속화되는 기계 속도와 장시간 노동",
-        stories: {
-          tom: {
-            scenario: "감독관이 방적기의 회전 속도를 1.5배로 올렸습니다. 기계가 굉음을 내며 빠르게 돌아가고, 실이 엉킬 때마다 벨트 밑으로 몸을 욱여넣어야 합니다. 졸음이 쏟아집니다.",
-            choices: [
-              {
-                text: "졸음을 참고 더 필사적으로 기계 밑으로 기어 들어간다.",
-                stats: { stat1: -25, stat2: +15, stat3: +20 },
-                story: "아슬아슬하게 작업량을 채워 주급 삭감을 면했지만, 날카로운 철제 톱니에 팔을 스쳐 피가 맺혔습니다.",
-                history: "당시 맨체스터 방적 공장의 아동 노동자들은 하루 14~16시간씩 혹사당했으며, 기계 틈새에 끼어 팔다리를 잃거나 사망하는 일이 빈번했습니다."
-              },
-              {
-                text: "너무 위험하니 잠시 기둥 뒤에서 쉬며 속도를 늦춘다.",
-                stats: { stat1: +10, stat2: -20, stat3: +25 },
-                story: "감독관의 무거운 가죽 채찍이 등을 강타했습니다. '게으름을 피웠다'며 이번 주 일당 절반이 깎였습니다.",
-                history: "당시 공장 감독관들은 아동들의 졸음을 막기 위해 매질과 체벌을 가했으며, 이를 '오버루커의 채찍질'이라 불렀습니다."
-              }
-            ]
-          },
-          william: {
-            scenario: "공장제 증기 직기가 만든 면직물이 시장에 헐값에 풀리며, 당신이 짠 손직물 가격이 3분의 1로 폭락했습니다. 밀가루 한 포대 살 돈이 없습니다.",
-            choices: [
-              {
-                text: "단가를 낮추기 위해 밤을 새워 베틀을 밟는다.",
-                stats: { stat1: -20, stat2: +10, stat3: +30 },
-                story: "눈이 침침해지고 허리가 굳어갑니다. 하지만 기계가 찍어내는 압도적인 물량 앞에서는 무의미한 저항일 뿐입니다.",
-                history: "1810~1830년대 증기 직기의 보급으로 수공업 직조공의 임금은 80% 가까이 곤두박질쳤으며 장인들은 극빈층으로 몰락했습니다."
-              },
-              {
-                text: "수공업을 포기하고 증기 공장의 단순 기계공으로 취업을 알아본다.",
-                stats: { stat1: -10, stat2: +15, stat3: +35 },
-                story: "공장주 제임스는 '나이 든 숙련공은 다루기 힘들다'며 비웃고, 아이들보다 적은 헐값의 임금을 제안합니다. 자존심이 찢겨나갑니다.",
-                history: "공장주들은 다루기 쉽고 순종적이며 임금이 싼 아동과 여성 노동자를 선호해, 성인 남성 숙련공들은 대량 실직 사태를 겪었습니다."
-              }
-            ]
-          },
-          james: {
-            scenario: "경쟁사에서 최신형 고속 증기 기관을 도입해 생산성을 40% 끌어올렸다는 소식이 들립니다. 공장 가동률을 극대화하지 않으면 이번 분기 만기 어음을 막을 수 없습니다.",
-            choices: [
-              {
-                text: "기계 안전 덮개 설치를 미루고 전면 야간 연속 조업을 명령한다.",
-                stats: { stat1: -20, stat2: +30, stat3: +25 },
-                story: "생산량은 폭증해 막대한 이윤을 챙겼으나, 공장에서 일하던 아이 한 명이 기계에 끼여 중상을 입었습니다.",
-                history: "초기 자본가들은 치열한 시장 경쟁에서 살아남기 위해 기계 안전장치 투자를 외면하고 가혹한 야간 노동을 강제했습니다."
-              },
-              {
-                text: "기계 덮개를 설치하고 노동자들의 휴식 시간을 30분 보장한다.",
-                stats: { stat1: +20, stat2: -25, stat3: -10 },
-                story: "사고는 줄었지만 경쟁사보다 원가가 높아져 거래처 두 곳을 빼앗겼습니다. 주주들의 거센 항의가 빗발칩니다.",
-                history: "자유방임주의 체제 속에서 인도주의적 조치를 취한 소수 공장주는 시장의 냉혹한 원가 경쟁에서 불리한 처지에 놓였습니다."
-              }
-            ]
-          },
-          mary: {
-            scenario: "공장 매연과 먼지가 가득 찬 실내에서 14시간째 서서 일하고 있습니다. 지하 셋방에 홀로 두고 온 아이의 기침 소리가 귓가에 맴돕니다.",
-            choices: [
-              {
-                text: "일당을 온전히 받기 위해 쉬지 않고 교대 시간까지 버틴다.",
-                stats: { stat1: -25, stat2: +15, stat3: +10 },
-                story: "어지럼증에 쓰러질 뻔했지만 겨우 하루를 버텼습니다. 손에 쥔 몇 펜스로 딱딱한 빵 두 조각을 샀습니다.",
-                history: "당시 여성 노동자들은 임신 중이거나 출산 직후에도 생계를 위해 공장으로 나와 하루 종일 서서 유독성 면 분진을 들이마셨습니다."
-              },
-              {
-                text: "감독관 몰래 아이에게 젖을 먹이기 위해 일찍 빠져나간다.",
-                stats: { stat1: +10, stat2: -25, stat3: +30 },
-                story: "지하방 아이는 무사히 안았으나, 다음 날 공장에서 무단 이탈을 이유로 3일 치 임금을 몰수당했습니다.",
-                history: "공장 규율은 철저한 분 단위 통제로 이루어졌으며, 잠시 자리를 비우는 것만으로도 가혹한 벌금과 해고 처분이 내려졌습니다."
-              }
-            ]
-          }
+<script>
+  const scenarios = {
+    tom: {
+      roleName: "아동 노동자 톰 (11세)",
+      stat1: "체력", stat2: "일당(실링)",
+      val1: 80, val2: 3,
+      rounds: [
+        {
+          title: "라운드 1: 멈추지 않는 증기 방적기",
+          desc: "하루 14시간째 일하고 있습니다. 돌아가는 기계 밑으로 기어들어가 엉킨 실밥을 빼내야 합니다. 졸음이 쏟아집니다.",
+          choices: [
+            { text: "잠을 쫓기 위해 무리해서 기계 밑으로 들어간다.", f: "기계 톱니에 옷자락이 스쳤지만 간신히 일당을 지켰습니다. (체력 -20)", d1: -20, d2: 0 },
+            { text: "잠시 기계 옆 구석에서 눈을 붙인다.", f: "감독관의 가죽 채찍을 맞고 하루 일당이 깎였습니다. (체력 -10, 일당 -1)", d1: -10, d2: -1 }
+          ]
+        },
+        {
+          title: "라운드 2: 식수 오염과 도시의 병",
+          desc: "공장 폐수와 오물이 섞인 우물물을 마신 동료 아이들이 하나둘 고열로 쓰러집니다.",
+          choices: [
+            { text: "갈증을 참으며 빗물을 받아 마신다.", f: "탈수를 겪었지만 전염병을 간신히 피했습니다. (체력 -10)", d1: -10, d2: 0 },
+            { text: "목이 말라 공장 앞 우물물을 마신다.", f: "배탈과 열병으로 며칠간 앓아누웠습니다. (체력 -30, 일당 -1)", d1: -30, d2: -1 }
+          ]
+        },
+        {
+          title: "라운드 3: 공장법 조사관의 비밀 질문",
+          desc: "의회에서 파견된 '새들러 위원회' 조사관이 다가와 공장주 몰래 하루 몇 시간 일하는지 묻습니다.",
+          choices: [
+            { text: "사실대로 하루 15시간 넘게 일한다고 털어놓는다.", f: "조사관은 수첩에 적었지만, 공장주에게 발각될까 두렵습니다.", d1: 0, d2: 0 },
+            { text: "해고가 두려워 괜찮다고 거짓말을 한다.", f: "일자리는 지켰지만 열악한 근로조건은 그대로입니다.", d1: -10, d2: 0 }
+          ]
+        },
+        {
+          title: "라운드 4: 파업 집회 참여",
+          desc: "성인 노동자들이 아동 노동 제한과 임금 보장을 외치며 공장 가동 중단을 요구합니다.",
+          choices: [
+            { text: "일손을 놓고 형, 누나들의 대열에 합류한다.", f: "공장은 멈췄고 노동의 가치를 깨닫기 시작했습니다.", d1: 0, d2: 0 },
+            { text: "보복이 두려워 묵묵히 기계 앞을 지킨다.", f: "하루치 빵은 얻었지만 고립감을 느낍니다. (일당 +1)", d1: -10, d2: 1 }
+          ]
         }
-      },
-      2: {
-        roundTitle: "Round 2. 도시 환경과 죽음의 그림자 (콜레라)",
-        theme: "도시 빈민가의 위생 붕괴와 전염병 창궐",
-        stories: {
-          tom: {
-            scenario: "공장 주변 어웰 강은 검은 오수와 오물이 뒤섞여 썩은 내가 진동합니다. 옆방의 형이 구토와 고열에 시달리며 쓰러졌습니다. 콜레라가 번지고 있습니다.",
-            choices: [
-              {
-                text: "강물을 길어와 그냥 마시고 공장으로 출근한다.",
-                stats: { stat1: -35, stat2: +10, stat3: +20 },
-                story: "오염된 물을 마신 후 맹렬한 복통이 찾아왔습니다. 일을 멈추면 굶어 죽기에 배를 움켜쥐고 기계 앞으로 갑니다.",
-                history: "1831~1832년 영국을 휩쓴 콜레라는 하수도가 없던 산업도시 빈민가를 강타해 수만 명의 목숨을 앗아갔습니다."
-              },
-              {
-                text: "약값을 구하기 위해 형의 낡은 옷을 전당포에 맡긴다.",
-                stats: { stat1: -10, stat2: -20, stat3: +15 },
-                story: "몇 푼으로 정수된 물과 가루약을 샀지만, 형은 끝내 눈을 감았습니다. 슬퍼할 시간도 없이 공장 종이 울립니다.",
-                history: "19세기 중반 맨체스터 노동자 계층의 영아 사망률은 50%에 달했고, 노동자의 평균 수명은 불과 17~20세 안팎이었습니다."
-              }
-            ]
-          },
-          william: {
-            scenario: "밀집된 빈민촌 골목마다 석회 가루가 뿌려지고 시체 운반 수레가 지나갑니다. 깨끗한 식수를 사려면 하루 수입의 절반을 써야 합니다.",
-            choices: [
-              {
-                text: "가족을 위해 빚을 내서라도 안전한 교외의 우물 물을 길어온다.",
-                stats: { stat1: +15, stat2: -30, stat3: +10 },
-                story: "가족은 감염을 면했으나, 고리대금업자의 독촉에 베틀을 압류당할 위기에 처했습니다.",
-                history: "산업도시의 급격한 팽창은 상하수도 설비 부족을 낳았고, 깨끗한 식수는 빈민들에게 감당하기 힘든 사치품이었습니다."
-              },
-              {
-                text: "빈민가 주민들과 함께 시 당국에 상하수도 설치 청원서를 제출한다.",
-                stats: { stat1: -15, stat2: 0, stat3: +25 },
-                story: "시의회는 '세금 낭비이자 사유재산 침해'라며 청원을 묵살했습니다. 분노한 이웃들이 기침을 토해냅니다.",
-                history: "당시 자유주의 정부는 공공 보건 개입을 꺼렸으며, 에드윈 채드윅의 위생 보고서(1842) 등이 발표된 뒤에야 공중보건법이 제정되었습니다."
-              }
-            ]
-          },
-          james: {
-            scenario: "공장 노동자 20%가 콜레라 증상으로 결근했습니다. 생산 라인이 멈출 위기이며, 질병이 상류층 주거 지역으로까지 번질지 모른다는 흉흉한 소문이 돕니다.",
-            choices: [
-              {
-                text: "가족과 함께 즉시 공기 좋은 교외 전원 저택으로 피신한다.",
-                stats: { stat1: -15, stat2: -15, stat3: +30 },
-                story: "안전한 별장에서 호화롭게 지냈으나, 현장 관리자가 도망쳐 공장 가동에 막대한 차질이 빚어졌습니다.",
-                history: "부르주아 자본가들은 매연과 전염병이 창궐하는 도시 중심부를 피해 교외의 쾌적한 전원지대에 호화 저택을 짓고 거주했습니다."
-              },
-              {
-                text: "공장 구내에 석회 소독을 실시하고 의사를 고용해 노동자를 치료한다.",
-                stats: { stat1: +25, stat2: -35, stat3: -20 },
-                story: "단기 지출은 컸지만 공장 노동자들의 신뢰를 얻고 가동 중단을 막았습니다. 지역 신문이 당신을 '자비로운 신사'로 보도합니다.",
-                history: "로버트 오언 같은 일부 선구적 계몽 자본가들은 위생과 주거 환경 개선이 오히려 생산성을 높인다는 것을 증명하려 했습니다."
-              }
-            ]
-          },
-          mary: {
-            scenario: "아이가 밤새 펄펄 끓는 열에 밭은기침을 합니다. 하수구가 역류해 방바닥에 시커먼 오수가 차오르고 있습니다.",
-            choices: [
-              {
-                text: "아이를 들처업고 비가 내리는 거리를 달려 자선 병원으로 간다.",
-                stats: { stat1: -20, stat2: -10, stat3: +20 },
-                story: "복도 가득 쓰러진 환자들 틈에서 몇 시간을 기다려 겨우 해열제를 받았습니다. 아이의 호흡이 조금은 편안해졌습니다.",
-                history: "공공 의료가 부재했던 당시 도시 빈민들은 턱없이 부족한 교회의 자선 시설이나 무료 진료소에 기대어 겨우 연명했습니다."
-              },
-              {
-                text: "방을 소독하기 위해 마른 짚을 태우고 밤샘 기도를 올린다.",
-                stats: { stat1: -30, stat2: 0, stat3: +30 },
-                story: "유독한 연기로 숨이 막혔고, 아침이 되자 아이의 체온이 싸늘하게 식어 있었습니다. 가슴을 쥐어뜯으며 오열합니다.",
-                history: "불결한 환경과 영양실조로 인해 맨체스터 하층민 아이들의 절반 이상이 다섯 살을 넘기지 못하고 목숨을 잃었습니다."
-              }
-            ]
-          }
+      ]
+    },
+    william: {
+      roleName: "숙련 직조공 윌리엄 (40세)",
+      stat1: "장인 자부심", stat2: "생활비(실링)",
+      val1: 90, val2: 20,
+      rounds: [
+        {
+          title: "라운드 1: 증기 직조기의 습격",
+          desc: "평생 수작업으로 최고급 천을 짜왔지만, 공장에서 찍어낸 값싼 직물이 시장을 장악했습니다. 손님이 끊겼습니다.",
+          choices: [
+            { text: "손기술을 믿고 수공업 방식을 고수한다.", f: "장인의 자존심은 지켰지만 수입이 절반으로 줄었습니다. (소득 -10)", d1: +10, d2: -10 },
+            { text: "자존심을 접고 방적 공장의 단순 기계공으로 취직한다.", f: "입에 풀칠은 하게 되었으나 장인의 긍지는 무너졌습니다. (자부심 -30, 소득 +5)", d1: -30, d2: +5 }
+          ]
+        },
+        {
+          title: "라운드 2: 네드 러드 장군의 밀서",
+          desc: "한밤중에 복면을 쓴 동료들이 찾아왔습니다. '우리의 밥줄을 빼앗은 공장 기계를 부수러 가자'고 제안합니다.",
+          choices: [
+            { text: "망치를 들고 공장으로 향한다. (러다이트 운동)", f: "증기 직조기 서너 대를 파괴했습니다. 가슴이 뚫리지만 군대의 추적이 두렵습니다. (자부심 +20)", d1: +20, d2: 0 },
+            { text: "폭력은 답이 아니라며 의회 탄원서 작성을 권유한다.", f: "동료들로부터 비겁자라는 비난을 들었습니다. (자부심 -20)", d1: -20, d2: 0 }
+          ]
+        },
+        {
+          title: "라운드 3: 기계파괴자 사형법 공포",
+          desc: "영국 의회가 기계를 파괴한 자를 사형에 처하는 법안을 통과시켰습니다. 군대가 거리에 배치됩니다.",
+          choices: [
+            { text: "지하 조직으로 숨어들어 끝까지 투쟁한다.", f: "현상수배범이 되어 가족을 떠나 도피 생활을 시작합니다. (소득 -10)", d1: +10, d2: -10 },
+            { text: "기계 파괴를 멈추고 노동자 공제 조합을 결성한다.", f: "합법적인 테두리 안에서 서로 돕는 조합을 만듭니다.", d1: +10, d2: 0 }
+          ]
+        },
+        {
+          title: "라운드 4: 차티스트 운동과 투표권",
+          desc: "노동자에게도 투표권을 달라는 '인민헌장(People's Charter)' 서명 운동이 전국으로 번집니다.",
+          choices: [
+            { text: "서명 운동의 책임자로 나서며 정치 개혁을 요구한다.", f: "법과 제도를 바꾸는 것이 근본적인 해결책임을 확신합니다.", d1: +20, d2: 0 },
+            { text: "당장 먹고살기 바빠 서명을 거부한다.", f: "변화의 기회를 외면한 채 하루하루 연명합니다.", d1: -20, d2: 0 }
+          ]
         }
-      },
-      3: {
-        roundTitle: "Round 3. 분노의 폭발: 러다이트와 결사",
-        theme: "기계 파괴 운동(Luddite)과 국가의 유혈 진압",
-        stories: {
-          tom: {
-            scenario: "야간 작업 중, 얼굴에 검댕을 칠한 괴한들이 망치와 도끼를 들고 공장 문을 부수며 난입했습니다! '네드 러드 장군 만세!'를 외치며 방적기를 부수기 시작합니다.",
-            choices: [
-              {
-                text: "폭도들의 편에 서서 공장 문 빗장을 열어젖힌다.",
-                stats: { stat1: -15, stat2: -20, stat3: +40 },
-                story: "기계가 박살 나며 내일 일자리를 잃었지만, 나를 짓누르던 쇳덩이가 부서지는 순간 묘한 해방감을 느꼈습니다.",
-                history: "러다이트 운동(1811~1816) 당시 빈민과 아동 노동자들은 때때로 밤낮없이 습격하는 기계 파괴자들에게 은밀한 협조를 보냈습니다."
-              },
-              {
-                text: "감독관의 편에 서서 경보 종을 힘차게 울린다.",
-                stats: { stat1: -10, stat2: +20, stat3: -10 },
-                story: "출동한 민병대가 침입자들을 체포했습니다. 공장주는 당신에게 특별 상여금 5실링을 던져주었습니다.",
-                history: "자본가들은 침입자를 밀고하거나 시설을 지킨 노동자에게 포상금을 주어 노동자들 사이의 연대를 분열시켰습니다."
-              }
-            ]
-          },
-          william: {
-            scenario: "비밀 결사대 동료들이 당신의 오두막을 찾아왔습니다. '윌리엄, 오늘 밤 제임스의 공장을 친다. 자네의 망치로 우리의 삶을 빼앗아간 저 악마의 기계들을 부수자!'",
-            choices: [
-              {
-                text: "망치를 들고 러다이트 습격대의 맨 앞에 선다.",
-                stats: { stat1: -25, stat2: -20, stat3: +50 },
-                story: "육중한 증기 역직기를 산산조각 냈습니다! 하지만 공장 밖에는 이미 대기하던 영국 정규군 붉은 군복 부대가 총구를 겨누고 있습니다.",
-                history: "영국 정부는 나폴레옹 전쟁 중임에도 자국 내 기계 파괴를 진압하기 위해 이베리아 반도에 파병한 군대보다 많은 병력을 산업지대에 투입했습니다."
-              },
-              {
-                text: "'폭력은 사형을 부를 뿐이다.' 의회에 합법적 탄원서를 보내자고 설득한다.",
-                stats: { stat1: -10, stat2: -10, stat3: -20 },
-                story: "동료들은 당신을 배신자라 부르며 떠났습니다. 당신이 보낸 탄원서는 의회 서기실 쓰레기통에 처박혔습니다.",
-                history: "1812년 영국 의회는 '기계파괴방지법'을 통과시켜 기계를 부수는 행위에 사형을 선고할 수 있도록 법률령을 제정했습니다."
-              }
-            ]
-          },
-          james: {
-            scenario: "'네드 러드'라는 서명이 적힌 협박 편지가 도착했습니다. '기계를 멈추고 직조공들의 정당한 임금을 보장하지 않으면 내일 밤 너의 공장은 잿더미가 될 것이다.'",
-            choices: [
-              {
-                text: "사설 경비대와 군대를 매수해 공장 정문에 발포 명령을 내린다.",
-                stats: { stat1: -20, stat2: -25, stat3: +40 },
-                story: "유혈 사태 끝에 침입자 셋이 사살되고 공장은 지켜냈습니다. 그러나 도시 전체가 당신을 향한 증오로 불타고 있습니다.",
-                history: "자본가들은 기동 군대와 무장 경비대를 고용해 공장을 요새화했고, 기계 파괴 가담자들은 즉결 체포되어 호주로 유배되거나 교수형을 당했습니다."
-              },
-              {
-                text: "노동자 대표들을 만나 기계 도입 속도를 조절하고 위로금을 지급한다.",
-                stats: { stat1: +20, stat2: -35, stat3: -25 },
-                story: "공장 방화는 막았지만 다른 공장주들은 당신이 '위험한 타협을 했다'며 상공회의소에서 당신을 제명하려 합니다.",
-                history: "노동자와 타협하려던 온건파 자본가들은 동료 부르주아지로부터 배신자로 낙인찍히며 배척당하기 일쑤였습니다."
-              }
-            ]
-          },
-          mary: {
-            scenario: "러다이트 운동에 가담했던 이웃 청년이 총상을 입고 피를 흘리며 당신의 지하방 문을 두드립니다. 군인들의 군화 소리가 골목을 울립니다.",
-            choices: [
-              {
-                text: "청년을 방 안쪽 석탄 궤짝 뒤에 숨겨준다.",
-                stats: { stat1: -15, stat2: -15, stat3: +35 },
-                story: "수색을 나온 군인들을 속여 넘겼습니다. 청년은 눈물을 흘리며 '고맙소, 우리의 투쟁은 헛되지 않을 거요'라고 속삭입니다.",
-                history: "러다이트 대원들이 군대의 추적을 피해 수년간 활동할 수 있었던 것은 가난한 도시 이웃들의 끈질긴 침묵과 은닉 덕분이었습니다."
-              },
-              {
-                text: "아이의 안전을 위해 청년을 냉정하게 쫓아낸다.",
-                stats: { stat1: 0, stat2: +10, stat3: -25 },
-                story: "청년은 몇 발자국 못 가 골목에서 체포되었습니다. 아이는 지켰지만, 차가운 양심의 가책이 심장을 찌릅니다.",
-                history: "러다이트 은닉죄 역시 사형 또는 식민지 유배형에 처해졌기에 빈민가 주민들은 공포와 인간성 사이에서 극심한 갈등을 겪었습니다."
-              }
-            ]
-          }
+      ]
+    },
+    james: {
+      roleName: "방적 공장주 제임스 (45세)",
+      stat1: "공장 자본(£)", stat2: "사회적 평판",
+      val1: 500, val2: 50,
+      rounds: [
+        {
+          title: "라운드 1: 최신식 증기기관 도입",
+          desc: "경쟁 공장들이 기계를 늘려 단가를 낮추고 있습니다. 우리 공장도 설비를 증설해야 생존할 수 있습니다.",
+          choices: [
+            { text: "대출을 받아 최신 증기 방적기를 대량 도입한다.", f: "생산량이 3배 뛰었지만 노동자들의 불만이 극에 달합니다. (자본 +200, 평판 -15)", d1: +200, d2: -15 },
+            { text: "기존 숙련공들의 일자리를 위해 도입을 미룬다.", f: "노동자들은 환호했으나 제품 가격 경쟁에서 밀립니다. (자본 -100, 평판 +20)", d1: -100, d2: +20 }
+          ]
+        },
+        {
+          title: "라운드 2: 야간 작업과 안전장치",
+          desc: "주문량이 폭주합니다. 밤샘 작업을 돌려야 납기를 맞출 수 있으나 기계 덮개 안전장치는 아직 없습니다.",
+          choices: [
+            { text: "안전장치 비용을 아끼고 24시간 철야 가동을 지시한다.", f: "막대한 이윤을 남겼으나 어린 직공 한 명이 손을 다쳤습니다. (자본 +150, 평판 -25)", d1: +150, d2: -25 },
+            { text: "비용을 들여 안전 덮개를 설치하고 교대 근무를 도입한다.", f: "단기 수익은 줄었으나 사고가 크게 줄었습니다. (자본 -80, 평판 +25)", d1: -80, d2: +25 }
+          ]
+        },
+        {
+          title: "라운드 3: 러다이트의 공습 위협",
+          desc: "밤마다 성난 직조공들이 공장 습격을 모의한다는 첩보가 들어왔습니다.",
+          choices: [
+            { text: "무장 민병대를 고용해 발포 권한을 부여한다.", f: "기계는 지켰으나 유혈 사태로 잔혹한 악덕 자본가로 낙인찍힙니다. (평판 -30)", d1: -50, d2: -30 },
+            { text: "노동자 대표를 만나 타협안을 제시한다.", f: "약간의 임금 인상으로 공장 파괴를 막아냈습니다. (자본 -50, 평판 +10)", d1: -50, d2: +10 }
+          ]
+        },
+        {
+          title: "라운드 4: 공장법 제정 논란",
+          desc: "의회에서 9세 미만 아동 노동 금지 및 노동시간 단축을 규정한 '공장법' 제정이 논의 중입니다.",
+          choices: [
+            { text: "자유방임주의를 주장하며 법안 반대 로비 자금을 댄다.", f: "규제를 막아 단기 이윤을 지켰으나 역사적 오명을 남깁니다. (자본 +50, 평판 -20)", d1: +50, d2: -20 },
+            { text: "로버트 오언처럼 모범 공장 모델을 도입해 노동 환경을 개선한다.", f: "초기 비용은 들었으나 노동자 생산성이 장기적으로 올랐습니다. (자본 -50, 평판 +40)", d1: -50, d2: +40 }
+          ]
         }
-      },
-      4: {
-        roundTitle: "Round 4. 사상의 갈등과 대안의 모색",
-        theme: "공장법, 사회주의 사상, 차티스트 운동의 태동",
-        stories: {
-          tom: {
-            scenario: "의회 조사관들이 공장에 들이닥쳤습니다. 새들러 위원회라는 곳에서 아동 노동의 실태를 조사하여 공장법을 만들겠다고 합니다. 당신에게 증언 기회가 주어집니다.",
-            choices: [
-              {
-                text: "감독관의 눈알이 희번덕거리지만, 매질과 하루 16시간 노동을 낱낱이 증언한다.",
-                stats: { stat1: +25, stat2: -15, stat3: -20 },
-                story: "당신의 용기 있는 증언이 속기록에 기록되었습니다. 공장에서 해고되었지만, 아동 노동을 제한하는 법안의 거름이 되었습니다.",
-                history: "1832년 새들러 보고서에 실린 아동들의 충격적 증언은 영국 여론을 뒤흔들었고, 마침내 1833년 최초로 9세 미만 노동을 금지한 공장법이 제정되었습니다."
-              },
-              {
-                text: "해고가 두려워 '공장에서 밥도 잘 주고 일도 편하다'고 거짓말을 한다.",
-                stats: { stat1: -20, stat2: +20, stat3: +30 },
-                story: "공장주는 만족해하며 당신에게 빵을 주었지만, 당신의 동생들은 앞으로도 16시간씩 톱니바퀴 밑을 기어야 합니다.",
-                history: "많은 빈민 아동과 부모들은 당장의 굶주림 때문에 조사관에게 실태를 숨기며 잔혹한 노동 구조에 묶여 있어야 했습니다."
-              }
-            ]
-          },
-          william: {
-            scenario: "런던에서 시작된 '인민헌장(People's Charter)' 서명 용지가 도착했습니다. '우리에겐 투표권이 필요하다! 노동자가 의회에 들어가야 법을 바꿀 수 있다!'",
-            choices: [
-              {
-                text: "차티스트 운동에 가담해 노동자 보통선거권 청원 서명 운동을 이끈다.",
-                stats: { stat1: +10, stat2: -20, stat3: +30 },
-                story: "수십만 명의 노동자가 모인 광장에서 연설했습니다. 비록 지금 당장은 부결되었으나, 민주주의의 거대한 물결을 시작했습니다.",
-                history: "차티스트 운동(1838~1848)은 보통선거, 비밀투표 등 6개 항을 요구한 영국 최초의 대중적 노동자 정치 운동이었습니다."
-              },
-              {
-                text: "로버트 오언의 협동조합 공동체 마을에 전 재산을 보태고 이주한다.",
-                stats: { stat1: +25, stat2: -10, stat3: -30 },
-                story: "기계와 인간이 공존하며 교육과 적정 노동이 보장되는 이상 사회를 꿈꾸며 새로운 공동체의 씨앗을 심습니다.",
-                history: "공상적 사회주의자 로버트 오언은 뉴래너크 방적공장에서 노동시간 단축과 노동자 복지 실험을 펼쳐 초기 협동조합의 기초를 닦았습니다."
-              }
-            ]
-          },
-          james: {
-            scenario: "영국 의회에서 '공장법' 개정이 논의되고 있습니다. 9세 이하 아동 고용 금지 및 청소년 노동시간을 12시간으로 제한하자는 내용입니다. 동료 자본가들이 로비를 벌이자고 합니다.",
-            choices: [
-              {
-                text: "의원들에게 뇌물을 주고 공장법 규제 조항을 대폭 무력화시킨다.",
-                stats: { stat1: -30, stat2: +40, stat3: +30 },
-                story: "법망을 피해 여전히 아이들을 헐값에 부릴 수 있게 되었습니다. 금고는 가득 찼지만, '피를 빠는 흡혈귀'라는 낙인이 찍힙니다.",
-                history: "1833년 공장법 통과 이후에도 자본가들은 법 집행 감독관이 극소수라는 점을 악용해 야간 노동과 편법 고용을 지속했습니다."
-              },
-              {
-                text: "공장법을 수용하고, 기술 혁신을 통해 기계 효율성을 높이는 방향으로 전환한다.",
-                stats: { stat1: +25, stat2: -20, stat3: -20 },
-                story: "노동시간이 줄어들자 노동자들의 불량률이 떨어지고 생산성이 역설적으로 증가했습니다. 현대적 경영인의 길을 걷습니다.",
-                history: "장기적으로 노동시간 단축과 기계 안전 규제는 노동자의 재생산 능력을 지키고, 기업들이 자발적 기술 혁신을 꾀하도록 유도했습니다."
-              }
-            ]
-          },
-          mary: {
-            scenario: "공장 지하실에서 '만국의 노동자여, 단결하라!'라는 문구가 적힌 마르크스와 엥겔스의 선언문 소책자가 돌고 있습니다. 비밀 노동조합 결성 집회가 열립니다.",
-            choices: [
-              {
-                text: "동료 여성 노동자들과 함께 비밀 노동조합에 가입하고 파업을 결의한다.",
-                stats: { stat1: +15, stat2: -20, stat3: +35 },
-                story: "손을 맞잡은 여공들이 공장 문을 걸어 잠갔습니다. 차가운 굴뚝 연기가 멎고, 연대의 따스함이 가슴을 채웁니다.",
-                history: "19세기 중후반에 이르러 마르크스주의와 노동운동이 결합하면서, 노동조합은 합법적 권리를 쟁취하고 자본주의의 독주를 견제하는 축이 되었습니다."
-              },
-              {
-                text: "파업 대신 공장 내 상호부조 공제조합을 만들어 아픈 노동자를 돕는다.",
-                stats: { stat1: +25, stat2: -10, stat3: -20 },
-                story: "작은 푼돈을 모아 결핵에 걸린 이웃 아이들의 치료비를 마련했습니다. 가혹한 도시 속 작은 방주가 되었습니다.",
-                history: "초기 노동자들은 법적 보호가 없는 상태에서 스스로 '우애조합(Friendly Societies)'을 만들어 질병, 장례, 실업에 대처했습니다."
-              }
-            ]
-          }
-        }
-      }
-    };
-
-    /* -------------------------------------------------------------
-       3. 게임 엔딩 로직 및 텍스트
-    ------------------------------------------------------------- */
-    const ENDINGS = [
-      {
-        id: 'cog',
-        badge: '비극의 부속품',
-        title: '거대한 기계의 톱니바퀴로 스러지다',
-        condition: (role, s1, s2, s3) => (role === 'tom' || role === 'mary') && s1 < 40,
-        desc: '당신은 증기기관이 내뿜는 맹렬한 열기와 검은 분진 속에서 청춘과 건강을 모두 바쳤습니다. 19세기 맨체스터의 화려한 면직물 수출 통계 뒤에는 당신처럼 20세를 넘기지 못하고 스러져간 수많은 영혼들의 침묵이 새겨져 있습니다.',
-        historicalStat: '1840년대 맨체스터 노동자 계층의 평균 기대수명: 약 17~19세 (농촌 지역은 38세)'
-      },
-      {
-        id: 'luddite_martyr',
-        badge: '저항의 기록',
-        title: '형장의 이슬로 남은 네드 러드의 후예',
-        condition: (role, s1, s2, s3) => (role === 'william' && s3 >= 60),
-        desc: '당신은 손의 기술을 빼앗고 가족을 굶주림으로 몰아넣은 기계에 맞서 망치를 휘둘렀습니다. 비록 국왕의 군대에 의해 체포되어 차가운 형장의 이슬로 사라졌지만, 당신의 저항은 "기술의 진보가 누구를 위한 것인가"라는 영원한 질문을 역사에 남겼습니다.',
-        historicalStat: '1812년 영국 의회 기계파괴죄 사형법 제정, 1813년 요크셔에서 러다이트 주동자 17명 단체 교수형 집행'
-      },
-      {
-        id: 'bourgeois_titan',
-        badge: '자본의 승리자',
-        title: '황금과 연기를 지배하는 산업 부르주아',
-        condition: (role, s1, s2, s3) => role === 'james' && s2 >= 80,
-        desc: '당신은 피도 눈물도 없는 원가 절감과 기계화 투자를 통해 맨체스터 굴지의 면방적 재벌이 되었습니다. 이제 당신은 1832년 선거법 개정으로 얻은 참정권을 행사하며, 귀족들을 제치고 국가의 새로운 지배 계급으로 군림합니다.',
-        historicalStat: '1832년 제1차 선거법 개정: 신흥 상공업 자본가(부르주아)에게 선거권 확대, 그러나 노동자는 철저히 배제됨'
-      },
-      {
-        id: 'reform_spark',
-        badge: '연대와 개혁',
-        title: '어둠을 밝히는 차티스트와 노동 연대의 씨앗',
-        condition: (role, s1, s2, s3) => true, // 기본 Fallback 또는 온건 개혁 엔딩
-        desc: '당신은 가혹한 현실에 굴복하거나 맹목적 파괴에 빠지는 대신, 동료들과 어깨를 걸고 법과 제도를 바꾸기 위한 기나긴 싸움을 시작했습니다. 당신의 발걸음은 훗날 노동조합의 합법화와 보통선거권 쟁취, 복지국가의 토대가 될 것입니다.',
-        historicalStat: '1847년 10시간 노동법 제정, 19세기 후반 노동조합 공인 및 참정권 점진적 확대'
-      }
-    ];
-
-    /* -------------------------------------------------------------
-       4. 애플리케이션 상태 관리
-    ------------------------------------------------------------- */
-    const state = {
-      role: null,
-      currentRound: 1,
-      stats: { stat1: 50, stat2: 50, stat3: 50 },
-      choicesHistory: []
-    };
-
-    // DOM 요소 캐싱
-    const elements = {
-      hud: document.getElementById('game-hud'),
-      hudRoleIcon: document.getElementById('hud-role-icon'),
-      hudRoleName: document.getElementById('hud-role-name'),
-      hudRoundLabel: document.getElementById('hud-round-label'),
-      stat1Name: document.getElementById('stat1-name'),
-      stat1Val: document.getElementById('stat1-val'),
-      stat1Bar: document.getElementById('stat1-bar'),
-      stat2Name: document.getElementById('stat2-name'),
-      stat2Val: document.getElementById('stat2-val'),
-      stat2Bar: document.getElementById('stat2-bar'),
-      stat3Name: document.getElementById('stat3-name'),
-      stat3Val: document.getElementById('stat3-val'),
-      stat3Bar: document.getElementById('stat3-bar'),
-      screenStart: document.getElementById('screen-start'),
-      screenRound: document.getElementById('screen-round'),
-      screenFeedback: document.getElementById('screen-feedback'),
-      screenEnding: document.getElementById('screen-ending'),
-      roleGrid: document.getElementById('role-select-grid'),
-      btnRandomRole: document.getElementById('btn-random-role'),
-      roundTitlePrefix: document.getElementById('round-title-prefix'),
-      roundHeadline: document.getElementById('round-headline'),
-      roundScenarioText: document.getElementById('round-scenario-text'),
-      choicesContainer: document.getElementById('choices-container'),
-      feedbackTitle: document.getElementById('feedback-title'),
-      feedbackChangeTags: document.getElementById('feedback-change-tags'),
-      feedbackStory: document.getElementById('feedback-story'),
-      feedbackHistory: document.getElementById('feedback-history'),
-      btnNextRound: document.getElementById('btn-next-round'),
-      endingTitle: document.getElementById('ending-title'),
-      endingBadge: document.getElementById('ending-badge'),
-      endingDesc: document.getElementById('ending-desc'),
-      finalStatsSummary: document.getElementById('final-stats-summary'),
-      debriefingQuestions: document.getElementById('debriefing-questions'),
-      btnCopySummary: document.getElementById('btn-copy-summary'),
-      copyToast: document.getElementById('copy-toast'),
-      btnRestart: document.getElementById('btn-restart')
-    };
-
-    /* -------------------------------------------------------------
-       5. 컨트롤러 및 렌더링 함수
-    ------------------------------------------------------------- */
-
-    // 시작 화면 역할 카드 초기화
-    function initStartScreen() {
-      elements.roleGrid.innerHTML = '';
-      Object.values(ROLES).forEach(r => {
-        const card = document.createElement('button');
-        card.className = "flex flex-col p-3 rounded-xl bg-coal-900/90 border border-sepia-800 hover:border-vintageGold text-left transition active:scale-95 group";
-        card.innerHTML = `
-          <div class="flex items-center space-x-2 mb-1.5">
-            <span class="w-6 h-6 rounded bg-coal-700 flex items-center justify-center text-vintageGold group-hover:bg-vintageGold group-hover:text-coal-900 transition text-xs">
-              <i class="fa-solid ${r.icon}"></i>
-            </span>
-            <span class="text-xs font-bold text-sepia-100">${r.name}</span>
-          </div>
-          <p class="text-[11px] font-semibold text-vintageGold mb-1">${r.title}</p>
-          <p class="text-[10px] text-gray-400 leading-tight line-clamp-2">${r.desc}</p>
-        `;
-        card.onclick = () => startGameWithRole(r.id);
-        elements.roleGrid.appendChild(card);
-      });
-    }
-
-    // 게임 시작
-    function startGameWithRole(roleId) {
-      const selected = ROLES[roleId];
-      state.role = selected;
-      state.currentRound = 1;
-      state.stats = { ...selected.initialStats };
-      state.choicesHistory = [];
-
-      // HUD 설정
-      elements.hudRoleIcon.className = `fa-solid ${selected.icon} text-vintageGold text-sm`;
-      elements.hudRoleName.textContent = `${selected.name} (${selected.title})`;
-      elements.stat1Name.textContent = selected.statNames.stat1;
-      elements.stat2Name.textContent = selected.statNames.stat2;
-      elements.stat3Name.textContent = selected.statNames.stat3;
-
-      elements.stat1Bar.className = `${selected.statColors.stat1} h-full transition-all duration-500`;
-      elements.stat2Bar.className = `${selected.statColors.stat2} h-full transition-all duration-500`;
-      elements.stat3Bar.className = `${selected.statColors.stat3} h-full transition-all duration-500`;
-
-      updateHUD();
-      elements.hud.classList.remove('hidden');
-
-      showScreen('round');
-      renderRound();
-    }
-
-    // HUD 업데이트
-    function updateHUD() {
-      // 0~100 clamp
-      ['stat1', 'stat2', 'stat3'].forEach(k => {
-        state.stats[k] = Math.max(0, Math.min(100, state.stats[k]));
-      });
-
-      elements.stat1Val.textContent = state.stats.stat1;
-      elements.stat2Val.textContent = state.stats.stat2;
-      elements.stat3Val.textContent = state.stats.stat3;
-
-      elements.stat1Bar.style.width = `${state.stats.stat1}%`;
-      elements.stat2Bar.style.width = `${state.stats.stat2}%`;
-      elements.stat3Bar.style.width = `${state.stats.stat3}%`;
-
-      elements.hudRoundLabel.textContent = `Round ${state.currentRound} / 4`;
-    }
-
-    // 화면 전환 헬퍼
-    function showScreen(screenName) {
-      ['start', 'round', 'feedback', 'ending'].forEach(name => {
-        const el = elements[`screen${name.charAt(0).toUpperCase() + name.slice(1)}`];
-        if (name === screenName) {
-          el.classList.remove('hidden');
-        } else {
-          el.classList.add('hidden');
-        }
-      });
-      // 스크롤 상단 초기화
-      const appContainer = document.getElementById('app-container');
-      const activeScreen = elements[`screen${screenName.charAt(0).toUpperCase() + screenName.slice(1)}`];
-      if (activeScreen) activeScreen.scrollTop = 0;
-    }
-
-    // 라운드 렌더링
-    function renderRound() {
-      const roundData = SCENARIOS[state.currentRound];
-      const roleStory = roundData.stories[state.role.id];
-
-      elements.roundTitlePrefix.textContent = `Round ${state.currentRound}`;
-      elements.roundHeadline.textContent = roundData.roundTitle.split('. ')[1] || roundData.roundTitle;
-      elements.roundScenarioText.innerHTML = `<p>${roleStory.scenario}</p>`;
-
-      // 선택지 버튼 생성
-      elements.choicesContainer.innerHTML = '';
-      roleStory.choices.forEach((choice, index) => {
-        const btn = document.createElement('button');
-        btn.className = "w-full text-left p-3.5 rounded-xl bg-coal-900 border border-sepia-800 hover:border-vintageGold active:scale-[0.98] transition flex flex-col justify-between";
-        btn.innerHTML = `
-          <div class="flex items-start space-x-2.5">
-            <span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-sepia-900 text-vintageGold text-[11px] font-bold shrink-0 mt-0.5">
-              ${index + 1}
-            </span>
-            <span class="text-xs sm:text-sm text-sepia-100 font-medium leading-relaxed">${choice.text}</span>
-          </div>
-        `;
-        btn.onclick = () => handleChoice(choice);
-        elements.choicesContainer.appendChild(btn);
-      });
-    }
-
-    // 선택 처리
-    function handleChoice(choice) {
-      // 스탯 반영
-      const diff1 = choice.stats.stat1;
-      const diff2 = choice.stats.stat2;
-      const diff3 = choice.stats.stat3;
-
-      state.stats.stat1 += diff1;
-      state.stats.stat2 += diff2;
-      state.stats.stat3 += diff3;
-      updateHUD();
-
-      // 히스토리 기록
-      state.choicesHistory.push({
-        round: state.currentRound,
-        choiceText: choice.text,
-        story: choice.story
-      });
-
-      // 피드백 화면 구성
-      renderFeedback(choice, diff1, diff2, diff3);
-      showScreen('feedback');
-    }
-
-    // 수치 변동 포맷 헬퍼
-    function formatStatTag(name, diff) {
-      if (diff === 0) return '';
-      const isPositive = diff > 0;
-      const sign = isPositive ? `+${diff}` : `${diff}`;
-      const color = isPositive ? 'text-green-400 bg-green-950/60 border-green-800' : 'text-rose-400 bg-rose-950/60 border-rose-800';
-      return `<span class="inline-block px-2 py-0.5 rounded text-[11px] border ${color}">${name} ${sign}</span>`;
-    }
-
-    // 피드백 렌더링
-    function renderFeedback(choice, d1, d2, d3) {
-      const r = state.role;
-      let tagsHtml = '';
-      tagsHtml += formatStatTag(r.statNames.stat1, d1);
-      tagsHtml += formatStatTag(r.statNames.stat2, d2);
-      tagsHtml += formatStatTag(r.statNames.stat3, d3);
-
-      elements.feedbackChangeTags.innerHTML = tagsHtml || '<span class="text-gray-400 text-xs">수치 변동 없음</span>';
-      elements.feedbackStory.textContent = choice.story;
-      elements.feedbackHistory.textContent = choice.history;
-
-      if (state.currentRound >= 4) {
-        elements.btnNextRound.textContent = "최종 결말 및 디브리핑 확인";
-      } else {
-        elements.btnNextRound.textContent = `Round ${state.currentRound + 1}로 넘어가기`;
-      }
-    }
-
-    // 엔딩 계산 및 렌더링
-    function renderEnding() {
-      elements.hud.classList.add('hidden');
-      const rId = state.role.id;
-      const s = state.stats;
-
-      // 엔딩 결정
-      let finalEnding = ENDINGS[ENDINGS.length - 1]; // 기본
-      for (const ending of ENDINGS) {
-        if (ending.condition(rId, s.stat1, s.stat2, s.stat3)) {
-          finalEnding = ending;
-          break;
-        }
-      }
-
-      elements.endingBadge.textContent = finalEnding.badge;
-      elements.endingTitle.textContent = finalEnding.title;
-      elements.endingDesc.textContent = finalEnding.desc;
-      elements.finalStatsSummary.textContent = `${state.role.statNames.stat1}: ${s.stat1} | ${state.role.statNames.stat2}: ${s.stat2} | ${state.role.statNames.stat3}: ${s.stat3}`;
-
-      // 수업용 토론 질문 구성 (고2 세계사 + 현대 AI 및 키오스크 연계)
-      elements.debriefingQuestions.innerHTML = `
-        <li><strong>역지사지 관점:</strong> 내가 맡은 인물(${state.role.name})의 입장에서 생존과 이익을 위해 어쩔 수 없었던 최선의 선택은 무엇이었나요?</li>
-        <li><strong>러다이트의 재조명:</strong> 19세기 직조공들의 기계 파괴는 단순한 '발전 거부'였을까요, 아니면 생존을 위한 마지막 '저항'이었을까요?</li>
-        <li><strong>현대 사회와의 연결:</strong> 오늘날 식당과 매장의 <strong>'키오스크·무인 결제'</strong>나 <strong>'생성형 AI'</strong> 도입으로 일자리를 잃거나 소외를 겪는 사람들의 문제는 1830년 맨체스터의 모습과 어떻게 닮아 있나요?</li>
-        <li><strong>해결책 모색:</strong> 기술의 발전이 모든 인간에게 축복이 되도록 하려면, 오늘날 우리는 어떤 법(공장법처럼)이나 사회적 제도를 마련해야 할까요?</li>
-      `;
-
-      showScreen('ending');
-    }
-
-    /* -------------------------------------------------------------
-       6. 이벤트 리스너 등록
-    ------------------------------------------------------------- */
-    // 랜덤 배정 버튼
-    elements.btnRandomRole.addEventListener('click', () => {
-      const keys = Object.keys(ROLES);
-      const randKey = keys[Math.floor(Math.random() * keys.length)];
-      startGameWithRole(randKey);
-    });
-
-    // 다음 라운드 버튼
-    elements.btnNextRound.addEventListener('click', () => {
-      if (state.currentRound < 4) {
-        state.currentRound++;
-        updateHUD();
-        showScreen('round');
-        renderRound();
-      } else {
-        renderEnding();
-      }
-    });
-
-    // 다시 하기 버튼
-    elements.btnRestart.addEventListener('click', () => {
-      elements.hud.classList.add('hidden');
-      showScreen('start');
-    });
-
-    // 패들렛 제출용 텍스트 복사 (execCommand 사용)
-    elements.btnCopySummary.addEventListener('click', () => {
-      const summaryText = `[1830 맨체스터 시뮬레이션 결과 보고서]
-- 역할: ${state.role.name} (${state.role.title})
-- 최종 결말: ${elements.endingTitle.textContent}
-- 최종 수치: ${elements.finalStatsSummary.textContent}
-- 나의 성찰: 1830년 맨체스터의 기계화와 오늘날 AI·키오스크 자동화는 인간의 존엄성과 일자리라는 측면에서 매우 유사한 고민을 던져줍니다.`;
-
-      const tempTextArea = document.createElement('textarea');
-      tempTextArea.value = summaryText;
-      tempTextArea.style.position = 'fixed';
-      tempTextArea.style.opacity = '0';
-      document.body.appendChild(tempTextArea);
-      tempTextArea.select();
-      
-      try {
-        const successful = document.execCommand('copy');
-        if (successful) {
-          elements.copyToast.classList.remove('hidden');
-          setTimeout(() => elements.copyToast.classList.add('hidden'), 3000);
-        }
-      } catch (err) {
-        console.error('복사 실패', err);
-      } finally {
-        document.body.removeChild(tempTextArea);
-      }
-    });
-
-    // 초기 실행
-    window.onload = function() {
-      initStartScreen();
-    };
-  </script>
-</body>
-</html>
+      ]
+    },
+    mary: {
+      roleName: "도시 빈민 여성 메리 (24세)",
+      stat1: "가족 건강", stat2: "주거 안정",
+      val1: 70, val2: 40,
+      rounds: [
+        {
+          title: "라운드 1: 축축한 지하 단칸방",
+          desc: "햇빛조차 들지 않는 지하 셋방에서 결핵을 앓는 아이와 함께 살고 있습니다. 집
